@@ -28,4 +28,5 @@ Thumbs.db
 .env.*.local
 
 # Deps
-/node_modules
+node_modules/
+*.tsbuildinfo
