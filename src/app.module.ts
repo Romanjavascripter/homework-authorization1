@@ -5,10 +5,12 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './features/users/entity/user.entity.js';
 import { UsersModule } from './features/users/users.module.js';
+import { AuthModule } from './auth/auth.module.js';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
+      envFilePath: '.env',
       isGlobal: true,
     }),
      UsersModule,
@@ -25,6 +27,7 @@ import { UsersModule } from './features/users/users.module.js';
         synchronize: true,
       }),
     }),
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
