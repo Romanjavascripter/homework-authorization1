@@ -1,12 +1,12 @@
 import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { PassportStrategy } from "@nestjs/passport";
-import { UsersRepository } from '../../features/users/users.repository.js';
 import { Strategy } from 'passport-local';
 import * as bcrypt from 'bcrypt';
+import { IUsersRepository } from "../../features/users/users.repository.interface.js";
 
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy){
-    constructor(private usersRepo: UsersRepository){
+    constructor(private usersRepo: IUsersRepository){
         super({
             usernameField:'login',
             passwordField:'password',

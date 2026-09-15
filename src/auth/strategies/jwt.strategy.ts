@@ -2,20 +2,22 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy, ExtractJwt } from 'passport-jwt';
 import { ConfigService } from '@nestjs/config';
-import { UsersRepository } from '../../features/users/users.repository.js';
+import { IUsersRepository } from '../../features/users/users.repository.interface.js';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
     private configService: ConfigService,
-    private usersRepo: UsersRepository,
+    private usersRepo: IUsersRepository,
   ) {
     const secret = configService.get('JWT_SECRET');
-  console.log('JWT_SECRET:', secret); // временно
+    if(!secret){
+      throw new Error("JWT_SECRET is not set")
+    }
     super({
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(), 
-      ignoreExpiration: false,
-      secretOrKey: configService.get('JWT_SECRET'), 
+      jwtFromRequest:ExtractJwt.fromAuthHeaderAsBearerToken(), 
+      ignoreExpiration:false,
+      secretOrKey: secret, 
     });
   }
 
@@ -24,7 +26,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     if (!user) {
       throw new UnauthorizedException('Invalid data');
     }
-    const { password, ...result } = user;
-    return result;
+    return user
   }
 }
